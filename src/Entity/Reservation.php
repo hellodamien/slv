@@ -36,14 +36,6 @@ class Reservation
     #[ORM\JoinColumn(nullable: false)]
     private ?Status $status = null;
 
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-        $this->setStatus($this->entityManager->getRepository(Status::class)->findOneBy(['name' => 'en attente']));
-    }
-
     public function getId(): ?int
     {
         return $this->id;

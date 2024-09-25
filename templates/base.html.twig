@@ -11,7 +11,12 @@
         {% endblock %}
     </head>
     <body>
-        <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column flex-grow-1 justify-content-center p-4 bg-dark text-white">
+            <h1 class="align-self-center">Location de véhicules</h1>
+            <h2 class="align-self-center fs-4">Le choix parfait pour votre voyage</h2>
+        </div>
+        <div class="container d-flex justify-content-center bg-light">
+            <div class="d-flex justify-content-center bg-light-subtle"></div>
             {% block body %}{% endblock %}
         </div>
     </body>

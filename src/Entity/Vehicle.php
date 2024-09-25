@@ -48,6 +48,9 @@ class Vehicle
     #[ORM\JoinColumn(nullable: false)]
     private ?Model $model = null;
 
+    #[ORM\OneToMany(targetEntity: Vehicle::class, mappedBy: 'vehicle')]
+    private Collection $reservations;
+
     public function __construct()
     {
         $this->Options = new ArrayCollection();
@@ -174,6 +177,27 @@ class Vehicle
     public function setModel(?Model $model): static
     {
         $this->model = $model;
+
+        return $this;
+    }
+
+    public function getReservations(): array
+    {
+        return $this->reservations->toArray();
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        $this->reservations->removeElement($reservation);
 
         return $this;
     }

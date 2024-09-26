@@ -17,7 +17,7 @@ class VehicleRepository extends ServiceEntityRepository
         parent::__construct($registry, Vehicle::class);
     }
 
-    public function findMostReserved(int $limit): array
+    public function findMostReserved(int $itemsPerPage, int $page): array
     {
         $query =
         '
@@ -26,7 +26,7 @@ class VehicleRepository extends ServiceEntityRepository
             LEFT JOIN reservation r ON r.vehicle_id = v.id
             GROUP BY v.id
             ORDER BY COUNT(r.id) DESC
-            LIMIT '.$limit.'
+            LIMIT '.$itemsPerPage.' OFFSET '.$page * $itemsPerPage.'
         ';
         return $this->getEntityManager()->getConnection()->executeQuery($query)->fetchAllAssociative();
     }
@@ -51,7 +51,7 @@ class VehicleRepository extends ServiceEntityRepository
                 OR r.end_date <= :endDate
             )
             AND v.type_id = :typeId OR :typeId = 0
-            LIMIT '.$dto->limit.'
+            LIMIT '.$dto->itemsPerPage.' OFFSET '.$dto->page * $dto->itemsPerPage.'
         ';
 
         return $this->getEntityManager()->getConnection()->executeQuery($query,

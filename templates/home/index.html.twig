@@ -37,5 +37,14 @@
                 </div>
             {% endfor %}
         </div>
+
+        <div class="d-flex flex-row flex-grow-1 justify-content-evenly">
+            {% if app.request.get('page') is defined and app.request.get('page') > 0 %}
+                <a href="{{ path('home', {'page': app.request.get('page') - 1}) }}" class="btn btn-primary"><-</a>
+            {% endif %}
+            {% if app.request.get('page') is defined and app.request.get('page') < vehicles|length / 3|round(0, 'floor') - 1 %}
+                <a href="{{ path('home', {'page': app.request.get('page') + 1}) }}" class="btn btn-primary">-></a>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}

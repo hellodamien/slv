@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController
 {
+    public const ITEMS_PER_PAGE = 6;
+    
     private VehicleRepository $vehicleRepository;
     private TypeRepository    $typeRepository;
     private ModelRepository   $modelRepository;
@@ -32,13 +34,15 @@ class HomeController extends AbstractController
     }
 
     #[Route('/', name: 'home')]
-    public function index(Request $request): Response
+    #[Route('/?page={page}', name: 'home_paginated')]
+    public function index(Request $request, int $page = 0): Response
     {
         $dto = HomeVehicleSearch::create(
             new DateTime('today'),
             new DateTime('tomorrow'),
             new Type(),
-            9
+            $page,
+            self::ITEMS_PER_PAGE
         );
 
         $form = $this->createForm(HomeVehicleSearchType::class, $dto);
@@ -48,7 +52,7 @@ class HomeController extends AbstractController
             $vehicles = $this->vehicleRepository->findAvailable($dto);
             $hasUsedFilter = true;
         } else {
-            $vehicles = $this->vehicleRepository->findMostReserved($dto->limit);
+            $vehicles = $this->vehicleRepository->findMostReserved(self::ITEMS_PER_PAGE, $page);
             $hasUsedFilter = false;
         }
         foreach ($vehicles as $id => $vehicle) {

@@ -28,31 +28,26 @@ class AppFixtures extends Fixture
             $typeEntities[] = $vehicleType;
         }
 
-        // vehicle brands
+        // vehicle brands and models
         $brands = [
-            'Citroën', 'Peugeot', 'Renault', 'Toyota',
-        ];
-        $brandEntities = [];
-        foreach ($brands as $brand) {
-            $vehicleBrand = new Brand();
-            $vehicleBrand->setName($brand);
-            $brandEntities[] = $vehicleBrand;
-        }
-
-        // vehicle models
-        $models = [
             'Citroën' => ['C1', 'C3', 'C3 Aircross', 'C4', 'C4 Cactus', 'C5 Aircross', 'Berlingo', 'C-Zero', 'Jumper', 'Jumpy', 'Spacetourer', 'Rifter'],
             'Peugeot' => ['208', '2008', '308', '3008', '5008', '508', 'Rifter'],
             'Renault' => ['Zoe', 'Twingo', 'Clio', 'Mégane', 'Scénic', 'Talisman', 'Kangoo', 'Trafic', 'Master'],
             'Toyota' => ['Kadjar', 'Captur', 'Koleos', 'C-HR', 'Yaris', 'Aygo', 'Corolla', 'RAV4', 'Land Cruiser'],
         ];
+        $brandEntities = [];
         $modelEntities = [];
-        foreach ($models as $brand => $brandModels) {
-            foreach ($brandModels as $model) {
-                $vehicleModel = new Model();
-                $vehicleModel->setName($model);
-                $vehicleModel->setBrand($brandEntities[array_search($brand, array_column($brandEntities, 'name'))]);
-                $modelEntities[] = $vehicleModel;
+
+        // make sure that a model isn't linked to multiple brands
+        foreach ($brands as $brand => $models) {
+            $brandEntity = new Brand();
+            $brandEntity->setName($brand);
+            $brandEntities[] = $brandEntity;
+            foreach ($models as $model) {
+                $modelEntity = new Model();
+                $modelEntity->setName($model);
+                $modelEntity->setBrand($brandEntity);
+                $modelEntities[] = $modelEntity;
             }
         }
 
@@ -70,21 +65,19 @@ class AppFixtures extends Fixture
         // vehicles
         $vehicleEntities = [];
         foreach ($modelEntities as $model) {
-            foreach ($typeEntities as $type) {
-                $vehicle = new Vehicle();
-                $vehicle->setModel($model);
-                $vehicle->setType($type);
-                $vehicle->setPassengers(random_int(2, 9));
-                $vehicle->setDailyRent(random_int(20, 200));
-                $vehicle->setOdometer(random_int(0, 300000));
-                $vehicle->setLicensePlate(sprintf('%s-%s-%s', chr(random_int(65, 90)), random_int(100, 999), chr(random_int(65, 90))));
-                $vehicle->setProductionYear(random_int(2000, 2022));
-                $vehicle->setPicture('https://picsum.photos/300');
-                $vehicle->addOption($optionEntities[random_int(0, count($optionEntities) - 1)]);
-                $vehicle->addOption($optionEntities[random_int(0, count($optionEntities) - 1)]);
-                $vehicle->addOption($optionEntities[random_int(0, count($optionEntities) - 1)]);
-                $vehicleEntities[] = $vehicle;
-            }
+            $vehicle = new Vehicle();
+            $vehicle->setModel($model);
+            $vehicle->setType($typeEntities[random_int(0, count($typeEntities) - 1)]);
+            $vehicle->setPassengers(random_int(2, 9));
+            $vehicle->setDailyRent(random_int(20, 200));
+            $vehicle->setOdometer(random_int(0, 300000));
+            $vehicle->setLicensePlate(sprintf('%s-%s-%s', chr(random_int(65, 90)), random_int(100, 999), chr(random_int(65, 90))));
+            $vehicle->setProductionYear(random_int(2000, 2022));
+            $vehicle->setPicture('https://picsum.photos/100/300');
+            $vehicle->addOption($optionEntities[random_int(0, count($optionEntities) - 1)]);
+            $vehicle->addOption($optionEntities[random_int(0, count($optionEntities) - 1)]);
+            $vehicle->addOption($optionEntities[random_int(0, count($optionEntities) - 1)]);
+            $vehicleEntities[] = $vehicle;
         }
 
         // driving licenses

@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\DTO\HomeVehicleSearch;
 use App\Entity\Vehicle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,7 +17,7 @@ class VehicleRepository extends ServiceEntityRepository
         parent::__construct($registry, Vehicle::class);
     }
 
-    public function findMostReserved(int $limit = 3): array
+    public function findMostReserved(int $limit): array
     {
         $query =
         '
@@ -34,32 +33,34 @@ class VehicleRepository extends ServiceEntityRepository
 
     public function findAvailable(HomeVehicleSearch $dto): array
     {
-//        $query =
-//        '
-//            SELECT v.*
-//            FROM vehicle v
-//            LEFT JOIN reservation r ON r.vehicle_id = v.id
-//            WHERE r.start_date > :startDate
-//            AND r.end_date < :endDate
-//            AND v.type_id = :typeId
-//            GROUP BY v.id
-//        ';
-//        return $this->getEntityManager()->getConnection()->executeQuery($query,
-//        [
-//            'startDate' => $dto->startDate->format('Y-m-d H:i:s'),
-//            'endDate' => $dto->endDate->format('Y-m-d H:i:s'),
-//            'typeId' => $dto->type->getId(),
-//        ]
-//        )->fetchAllAssociative();
-        return
-            $this->createQueryBuilder('v')
-            ->leftJoin('v.reservations', 'r', Join::WITH, 'r.startDate > :startDate AND r.endDate < :endDate')
-            ->andWhere('v.type = :type')
-            ->setParameter('startDate', $dto->startDate)
-            ->setParameter('endDate', $dto->endDate)
-            ->setParameter('type', $dto->type)
-            ->getQuery()
-            ->getResult();
+        if ($dto->type === null) {
+            $typeId = 0;
+        } else {
+            $typeId = $dto->type->getId();
+        }
+        // get all vehicles that are not reserved in the given time frame
+        // @fixme i dont get it help me :c
+        $query = '
+            SELECT v.*
+            FROM vehicle v
+            WHERE v.id NOT IN
+            (
+                SELECT r.vehicle_id
+                FROM reservation r
+                WHERE r.start_date >= :startDate
+                OR r.end_date <= :endDate
+            )
+            AND v.type_id = :typeId OR :typeId = 0
+            LIMIT '.$dto->limit.'
+        ';
+
+        return $this->getEntityManager()->getConnection()->executeQuery($query,
+        [
+            'startDate' => $dto->startDate->format('Y-m-d H:i:s'),
+            'endDate'   => $dto->endDate->format('Y-m-d H:i:s'),
+            'typeId'    => $typeId,
+        ]
+        )->fetchAllAssociative();
     }
 
     //    /**

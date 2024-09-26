@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\DTO\HomeVehicleSearch;
 use App\Entity\Type;
 use App\Form\HomeVehicleSearchType;
+use App\Repository\ModelRepository;
+use App\Repository\TypeRepository;
 use App\Repository\VehicleRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,13 +16,19 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController
 {
     private VehicleRepository $vehicleRepository;
+    private TypeRepository    $typeRepository;
+    private ModelRepository   $modelRepository;
 
     public function __construct
     (
-        VehicleRepository $vehicleRepository
+        VehicleRepository $vehicleRepository,
+        TypeRepository    $typeRepository,
+        ModelRepository   $modelRepository
     )
     {
         $this->vehicleRepository = $vehicleRepository;
+        $this->typeRepository    = $typeRepository;
+        $this->modelRepository   = $modelRepository;
     }
 
     #[Route('/', name: 'home')]
@@ -30,6 +38,7 @@ class HomeController extends AbstractController
             new DateTime('today'),
             new DateTime('tomorrow'),
             new Type(),
+            9
         );
 
         $form = $this->createForm(HomeVehicleSearchType::class, $dto);
@@ -37,13 +46,21 @@ class HomeController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $vehicles = $this->vehicleRepository->findAvailable($dto);
+            $hasUsedFilter = true;
         } else {
-            $vehicles = $this->vehicleRepository->findMostReserved();
+            $vehicles = $this->vehicleRepository->findMostReserved($dto->limit);
+            $hasUsedFilter = false;
+        }
+        foreach ($vehicles as $id => $vehicle) {
+            $vehicle['type'] = $this->typeRepository->find($vehicle['type_id']);
+            $vehicle['model'] = $this->modelRepository->find($vehicle['model_id']);
+            $vehicles[$id] = $vehicle;
         }
 
         return $this->render('home/index.html.twig', [
-            'form' => $form->createView(),
-            'vehicles' => $vehicles,
+            'form'          => $form->createView(),
+            'vehicles'      => $vehicles,
+            'hasUsedFilter' => $hasUsedFilter,
         ]);
     }
 }

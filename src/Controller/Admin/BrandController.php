@@ -84,7 +84,7 @@ class BrandController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'admin_brand_delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
+    #[Route('/{id}/delete', name: 'admin_brand_delete', requirements: ['id' => '\d+'])]
     public function delete(int $id): Response
     {
         $brand = $this->brandRepository->find($id);

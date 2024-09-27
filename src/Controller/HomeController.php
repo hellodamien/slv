@@ -40,7 +40,7 @@ class HomeController extends AbstractController
         $dto = HomeVehicleSearch::create(
             new DateTime('today'),
             new DateTime('tomorrow'),
-            new Type(),
+            $this->typeRepository->findAll()[0],
             $page,
             self::ITEMS_PER_PAGE
         );

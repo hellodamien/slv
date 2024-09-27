@@ -8,6 +8,7 @@ use App\Repository\BrandRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/admin/brand')]
@@ -27,7 +28,7 @@ class BrandController extends AbstractController
     }
 
     #[Route('/', name: 'admin_brand_index')]
-    public function index()
+    public function index(): Response
     {
         $brands = $this->brandRepository->findAll();
 
@@ -37,7 +38,7 @@ class BrandController extends AbstractController
     }
 
     #[Route('/{id}', name: 'admin_brand_show', requirements: ['id' => '\d+'])]
-    public function show(int $id)
+    public function show(int $id): Response
     {
         $brand = $this->brandRepository->find($id);
 
@@ -47,7 +48,7 @@ class BrandController extends AbstractController
     }
 
     #[Route('/new', name: 'admin_brand_new')]
-    public function new(Request $request)
+    public function new(Request $request): Response
     {
         $brand = new Brand();
 
@@ -66,7 +67,7 @@ class BrandController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'admin_brand_edit', requirements: ['id' => '\d+'])]
-    public function edit(Request $request, int $id)
+    public function edit(Request $request, int $id): Response
     {
         $brand = $this->brandRepository->find($id);
 
@@ -84,7 +85,7 @@ class BrandController extends AbstractController
     }
 
     #[Route('/{id}', name: 'admin_brand_delete', requirements: ['id' => '\d+'], methods: ['DELETE'])]
-    public function delete(int $id)
+    public function delete(int $id): Response
     {
         $brand = $this->brandRepository->find($id);
 

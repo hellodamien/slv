@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un modèle{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-grow-1 flex-column m-4">
+        <div class="d-flex flex-column flex-grow-1 justify-content-center p-4 text-black">
+            <h1 class="align-self-center">Ajouter un modèle</h1>
+            <h2 class="align-self-center fs-4">Ajoutez les informations du modèle</h2>
+        </div>
+        {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.brand) }}
+        {{ form_row(form.submit) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

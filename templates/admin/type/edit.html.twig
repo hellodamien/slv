@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un type{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-grow-1 flex-column m-4">
+        <div class="d-flex flex-column flex-grow-1 justify-content-center p-4 text-black">
+            <h1 class="align-self-center">Modifier un type</h1>
+            <h2 class="align-self-center fs-4">Modifiez les informations du type</h2>
+        </div>
+        {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.submit) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

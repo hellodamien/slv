@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Options{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-grow-1 flex-column m-4">
+        <div class="d-flex flex-column flex-grow-1 justify-content-center p-4 text-black">
+            <h1 class="align-self-center">Options</h1>
+            <h2 class="align-self-center fs-4">Les options de véhicules disponibles</h2>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Option</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for option in options %}
+                    <tr>
+                        <td><a href="{{ path('admin_option_show', {'id': option.id}) }}">{{ option.name }}</a></td>
+                        <td>
+                            <a href="{{ path('admin_option_edit', {'id': option.id}) }}" class="btn btn-primary">Modifier</a>
+                            <a href="{{ path('admin_option_delete', {'id': option.id}) }}" class="btn btn-danger">Supprimer</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ path('admin_option_new') }}" class="align-self-center col-3 btn btn-success">Ajouter une option</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Véhicule{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-grow-1 flex-column m-4">
+        <div class="d-flex flex-column flex-grow-1 justify-content-center p-4 text-black">
+            <h1 class="align-self-center">Véhicule {{ vehicle.model.brand.name }} {{ vehicle.model.name }}</h1>
+            <h2 class="align-self-center fs-4">Informations du véhicule</h2>
+        </div>
+        <div class="d-flex flex-column flex-grow-1 justify-content-center p-4 text-black">
+            <div class="d-flex flex-column flex-grow-1 justify-content-center p-4 text-black">
+                <h3 class="align-self-center">Informations générales</h3>
+                <p class="align-self-center">Marque : {{ vehicle.model.brand.name }}</p>
+                <p class="align-self-center">Modèle : {{ vehicle.model.name }}</p>
+                <p class="align-self-center">Type : {{ vehicle.type }}</p>
+                <p class="align-self-center">Année de production : {{ vehicle.productionYear }}</p>
+                <p class="align-self-center">Immatriculation : {{ vehicle.licensePlate }}</p>
+                <p class="align-self-center">Kilométrage : {{ vehicle.odometer }} km</p>
+                <p class="align-self-center">Nombre de passagers : {{ vehicle.passengers }}</p>
+                <p class="align-self-center">Prix journalier : {{ vehicle.dailyRent }} €</p>
+            </div>
+            <a href="{{ path('admin_vehicle_index') }}" class="align-self-center col-1 btn btn-primary">Retour</a>
+        </div>
+    </div>
+{% endblock %}

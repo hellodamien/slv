@@ -16,15 +16,15 @@ security:
             lazy: true
             provider: customers
             form_login:
-                login_path: app_login
-                check_path: app_login
+                login_path: login
+                check_path: login
                 enable_csrf: true
                 default_target_path: home
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
             logout:
-                path: app_logout
+                path: logout
                 target: home
 
             # activate different ways to authenticate

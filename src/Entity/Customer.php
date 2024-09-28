@@ -6,9 +6,11 @@ use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
-class Customer
+class Customer implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -47,6 +49,12 @@ class Customer
      */
     #[ORM\ManyToMany(targetEntity: DrivingLicense::class)]
     private Collection $drivingLicenses;
+
+    #[ORM\Column(length: 2047)]
+    private ?string $password = null;
+
+    #[ORM\Column(type: 'json', length: 255)]
+    private ?array $roles = null;
 
     public function __construct()
     {
@@ -195,5 +203,69 @@ class Customer
         $this->drivingLicenses->removeElement($drivingLicense);
 
         return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        if ($this->roles === null) {
+            return ['ROLE_USER'];
+        }
+
+        return $this->roles;
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function addRole(string $role): static
+    {
+        if ($this->roles === null) {
+            $this->roles = [];
+        }
+
+        if (!in_array($role, $this->roles)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
+
+    public function removeRole(string $role): static
+    {
+        if ($this->roles === null) {
+            return $this;
+        }
+
+        $key = array_search($role, $this->roles);
+        if ($key !== false) {
+            unset($this->roles[$key]);
+        }
+
+        return $this;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // not implemented
+    }
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
     }
 }

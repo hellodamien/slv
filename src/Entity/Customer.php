@@ -6,10 +6,13 @@ use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'Un compte existe déjà avec cet email.')]
 class Customer implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -24,18 +27,33 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastName = null;
 
     #[ORM\Column(length: 2047, nullable: true)]
+    #[Assert\Regex(
+        pattern: '/^(\d{1,4}[\s\w]{1,2047})$/',
+        message: 'L\'adresse "{{ value }}" n\'est pas valide.'
+    )]
     private ?string $address = null;
 
     #[ORM\Column(length: 20, nullable: true)]
+    #[Assert\Regex(
+        pattern: '/^\d{5}$/',
+        message: 'Le code postal "{{ value }}" n\'est pas valide.'
+    )]
     private ?string $zipCode = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $city = null;
 
     #[ORM\Column(length: 1023)]
+    #[Assert\Email(
+        message: 'L\'email "{{ value }}" n\'est pas valide.'
+    )]
     private ?string $email = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\Regex(
+        pattern: '/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/',
+        message: 'Le numéro de téléphone "{{ value }}" n\'est pas valide.'
+    )]
     private ?string $phoneNumber = null;
 
     /**
@@ -54,6 +72,7 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(type: 'json', length: 255)]
+    #[Assert\Json]
     private ?array $roles = null;
 
     public function __construct()

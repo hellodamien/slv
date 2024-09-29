@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-grow-1 flex-column justify-content-center m-4">
+        {{ form_start(form, {'attr': {'class': 'd-flex flex-grow-1 flex-row justify-content-evenly m-2'}}) }}
+        {{ form_row(form.startDate) }}
+        {{ form_row(form.endDate) }}
+        {{ form_row(form.type) }}
+        {{ form_end(form) }}
+
+        {% if hasUsedFilter %}
+            <h2 class="align-self-center">Des véhicules qui vous correspondent</h2>
+        {% else %}
+            <h2 class="align-self-center">Nos véhicules en vedette</h2>
+        {% endif %}
+
+        <div class="d-flex flex-column justify-content-evenly m-2">
+            {% for i in 0..1 %}
+                <div class="row justify-content-evenly">
+                    {% for j in 0..2 %}
+                        {% if vehicles[i * 3 + j] is defined %}
+                            {% set vehicle = vehicles[i * 3 + j] %}
+                                <div class="card col-3 m-2">
+                                    <img src="{{ vehicle.picture }}" class="card-img-top" style="height: 200px; width: 100%" alt="{{ vehicle.model.brand.name }} {{ vehicle.model.name }}">
+                                    <div class="card-body justify-content-center">
+                                        <h5 class="card-title text-center">{{ vehicle.model.brand.name }} {{ vehicle.model.name }}</h5>
+                                        <div class="d-flex flex-row justify-content-evenly">
+                                            <p class="card-text">Prix: {{ vehicle.daily_rent }}€ /jour</p>
+                                            <a href="{{ path('home', {'id': vehicle.id}) }}" class="btn btn-primary">Voir</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="d-flex flex-row flex-grow-1 justify-content-evenly">
+            {% if app.request.get('page') is defined and app.request.get('page') > 0 %}
+                <a href="{{ path('home', {'page': app.request.get('page') - 1}) }}" class="btn btn-primary"><-</a>
+            {% endif %}
+            {% if app.request.get('page') is defined and app.request.get('page') < vehicles|length / 3|round(0, 'floor') - 1 %}
+                <a href="{{ path('home', {'page': app.request.get('page') + 1}) }}" class="btn btn-primary">-></a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

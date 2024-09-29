@@ -8,13 +8,22 @@ use App\Entity\DrivingLicense;
 use App\Entity\Model;
 use App\Entity\Option;
 use App\Entity\Reservation;
+use App\Entity\Status;
 use App\Entity\Type;
 use App\Entity\Vehicle;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
+
     public function load(ObjectManager $manager): void
     {
         // vehicle types
@@ -110,8 +119,26 @@ class AppFixtures extends Fixture
             $customerEntity->setPhoneNumber($customer[6]);
             $customerEntity->addDrivingLicense($licenseEntities[random_int(0, count($licenseEntities) - 1)]);
             $customerEntity->addDrivingLicense($licenseEntities[random_int(0, count($licenseEntities) - 1)]);
+            $customerEntity->setRoles(['ROLE_USER']);
+            $customerEntity->setPassword($this->passwordHasher->hashPassword($customerEntity, 'password'));
             $customerEntities[] = $customerEntity;
         }
+
+        // admin user
+        $admin = new Customer();
+        $admin->setFirstName('Admin');
+        $admin->setLastName('Admin');
+        $admin->setAddress('1 Admin Street');
+        $admin->setZipCode('12345');
+        $admin->setCity('Admin City');
+        $admin->setEmail('admin@slv.local');
+        $admin->setPhoneNumber('+123 456 7890');
+        $admin->addDrivingLicense($licenseEntities[random_int(0, count($licenseEntities) - 1)]);
+        $admin->addDrivingLicense($licenseEntities[random_int(0, count($licenseEntities) - 1)]);
+        $admin->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
+        $admin->setPassword($this->passwordHasher->hashPassword($admin, 'admin'));
+        $customerEntities[] = $admin;
+
 
         // reservation status
         $statuses = [
@@ -119,7 +146,7 @@ class AppFixtures extends Fixture
         ];
         $statusEntities = [];
         foreach ($statuses as $status) {
-            $statusEntity = new \App\Entity\Status();
+            $statusEntity = new Status();
             $statusEntity->setName($status);
             $statusEntities[] = $statusEntity;
         }
@@ -138,7 +165,7 @@ class AppFixtures extends Fixture
             $reservationEntity->setEndDate(new \DateTimeImmutable($reservation[1]));
             $reservationEntity->setCustomer($customerEntities[random_int(0, count($customerEntities) - 1)]);
             $reservationEntity->setVehicle($vehicleEntities[random_int(0, count($vehicleEntities) - 1)]);
-            $reservationEntity->setStatus($manager->getRepository(\App\Entity\Status::class)->findOneBy(['name' => $reservation[2]]));
+            $reservationEntity->setStatus($manager->getRepository(Status::class)->findOneBy(['name' => $reservation[2]]));
             $reservationEntity->setReference(uniqid());
             $reservationEntity->setStatus($statusEntities[0]);
             $reservationEntities[] = $reservationEntity;

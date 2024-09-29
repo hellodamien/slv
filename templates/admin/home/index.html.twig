@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-column justify-content-center">
+        <h1>Dashboard</h1>
+        <h2>Administration</h2>
+        <ul class="list-group col-10">
+            <li class="list-group-item"><a href="{{ path('admin_brand_index') }}">Marques</a></li>
+            <li class="list-group-item"><a href="{{ path('admin_model_index') }}">Modèles</a></li>
+            <li class="list-group-item"><a href="{{ path('admin_option_index') }}">Options</a></li>
+            <li class="list-group-item"><a href="{{ path('admin_status_index') }}">Statuts</a></li>
+            <li class="list-group-item"><a href="{{ path('admin_type_index') }}">Types</a></li>
+            <li class="list-group-item"><a href="{{ path('admin_vehicle_index') }}">Véhicules</a></li>
+        </ul>
+    </div>
+{% endblock %}

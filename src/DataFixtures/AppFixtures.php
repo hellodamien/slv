@@ -82,7 +82,7 @@ class AppFixtures extends Fixture
             $vehicle->setOdometer(random_int(0, 300000));
             $vehicle->setLicensePlate(sprintf('%s-%s-%s', chr(random_int(65, 90)), random_int(100, 999), chr(random_int(65, 90))));
             $vehicle->setProductionYear(random_int(2000, 2022));
-            $vehicle->setPicture('https://picsum.photos/100/300');
+            $vehicle->setPicture('/image/vehicle'.random_int(1, 9).'.jpg');
             $vehicle->addOption($optionEntities[random_int(0, count($optionEntities) - 1)]);
             $vehicle->addOption($optionEntities[random_int(0, count($optionEntities) - 1)]);
             $vehicle->addOption($optionEntities[random_int(0, count($optionEntities) - 1)]);
@@ -102,10 +102,10 @@ class AppFixtures extends Fixture
 
         // customers
         $customers = [
-            ['John', 'Doe', '10 Downing Street', 'SW1A 2AA', 'London', '[email protected]', '+44 20 7930 4832'],
-            ['Jane', 'Doe', '1600 Pennsylvania Avenue NW', '20500', 'Washington, D.C.', ' [email protected]', '+1 202-456-1111'],
-            ['Jean', 'Dupont', '55 Rue du Faubourg Saint-Honoré', '75008', 'Paris', ' [email protected]', '+33 1 42 92 81 00'],
-            ['Pierre', 'Dupont', '2 Rue de l\'Élysée', '75008', 'Paris', ' [email protected]', '+33 1 42 92 81 00'],
+            ['John', 'Doe', '10 Downing Street', '00000', 'London', 'john.doe@example.biz', '0123456789'],
+            ['Jane', 'Doe', '1600 Pennsylvania Avenue NW', '20500', 'Washington, D.C.', 'yes@no.org', '0123456789'],
+            ['Jean', 'Dupont', '55 Rue du Faubourg Saint-Honoré', '75008', 'Paris', 'yum@dupont.fr', '+33 1 42 92 81 00'],
+            ['Pierre', 'Dupont', '2 Rue de l\'Élysée', '75008', 'Paris', 'ilove@symfony.fake', '+33 1 42 92 81 00'],
         ];
         $customerEntities = [];
         foreach ($customers as $customer) {

@@ -37,6 +37,24 @@ class VehicleRepository extends ServiceEntityRepository
         )->fetchOne() === 0;
     }
 
+    public function isAvailableDuringTimeFrame(int $id, DateTime $startDate, DateTime $endDate): bool
+    {
+        $query = '
+            SELECT COUNT(r.id)
+            FROM reservation r
+            WHERE r.vehicle_id = :id
+            AND r.start_date >= :startDate
+            AND r.end_date <= :endDate
+        ';
+        return  $this->getEntityManager()->getConnection()->executeQuery($query,
+        [
+            'id'       => $id,
+            'startDate' => $startDate->format('Y-m-d H:i:s'),
+            'endDate'   => $endDate->format('Y-m-d H:i:s'),
+        ]
+        )->fetchOne() === 0;
+    }
+
     public function findMostReserved(int $itemsPerPage, int $page): array
     {
         $query =

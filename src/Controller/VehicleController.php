@@ -19,6 +19,11 @@ class VehicleController extends AbstractController
     public function index(int $id): Response
     {
         $vehicle = $this->vehicleRepository->find($id);
+
+        if ($vehicle === null) {
+            return $this->redirectToRoute('home');
+        }
+
         $isAvailable = $this->vehicleRepository->isAvailable($id);
 
         return $this->render('vehicle/index.html.twig', [

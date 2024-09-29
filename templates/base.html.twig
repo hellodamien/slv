@@ -14,6 +14,31 @@
         <div class="d-flex flex-column flex-grow-1 justify-content-center p-4 bg-dark text-white">
             <h1 class="align-self-center">Location de véhicules</h1>
             <h2 class="align-self-center fs-4">Le choix parfait pour votre voyage</h2>
+            <!-- Button to open user popup, with login and register link if unauthenticated or admin, logout and profile settings otherwise -->
+            <div class="position-absolute end-0 m-4 d-flex justify-content-center">
+                <button type="button" class="btn btn-dark rounded-circle m-0 p-0 text-white" id="userPopupBtn" style="width: 50px; height: 50px;">
+                    <svg width="50px" height="50px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier"> <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g>
+                    </svg>
+                </button>
+                <!-- Popup content -->
+                <div class="position-absolute end-0 m-4 d-none bg-dark text-white rounded border border-white" id="userPopup" style="width: 200px;">
+                    <div class="d-flex flex-column">
+                        {% if app.user %}
+                            <a href="{{ path('home') }}" class="btn btn-dark text-gray" style="color: gray !important;">Profil</a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('admin_brand_index') }}" class="btn btn-dark text-white">Administration</a>
+                            {% endif %}
+                            <a href="{{ path('logout') }}" class="btn btn-dark text-white">Déconnexion</a>
+                        {% else %}
+                            <a href="{{ path('login') }}" class="btn btn-dark text-white">Connexion</a>
+                            <a href="{{ path('register') }}" class="btn btn-dark text-white">Inscription</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="container d-flex justify-content-center bg-light">
             {% block body %}{% endblock %}

@@ -29,7 +29,7 @@
                         {% if app.user %}
                             <a href="{{ path('home') }}" class="btn btn-dark text-gray" style="color: gray !important;">Profil</a>
                             {% if is_granted('ROLE_ADMIN') %}
-                                <a href="{{ path('admin_brand_index') }}" class="btn btn-dark text-white">Administration</a>
+                                <a href="{{ path('admin_home') }}" class="btn btn-dark text-white">Administration</a>
                             {% endif %}
                             <a href="{{ path('logout') }}" class="btn btn-dark text-white">Déconnexion</a>
                         {% else %}

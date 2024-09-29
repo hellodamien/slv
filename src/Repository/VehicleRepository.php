@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\DTO\HomeVehicleSearch;
 use App\Entity\Vehicle;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -15,6 +16,25 @@ class VehicleRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Vehicle::class);
+    }
+
+    // can't use querybuilder for these queries since it's being bitey
+
+    public function isAvailable(int $id): bool
+    {
+        $query = '
+            SELECT COUNT(r.id)
+            FROM reservation r
+            WHERE r.vehicle_id = :id
+            AND r.start_date >= :now
+            AND r.end_date <= :now
+        ';
+        return  $this->getEntityManager()->getConnection()->executeQuery($query,
+        [
+            'id'  => $id,
+            'now' => (new DateTime())->format('Y-m-d H:i:s'),
+        ]
+        )->fetchOne() === 0;
     }
 
     public function findMostReserved(int $itemsPerPage, int $page): array
@@ -39,7 +59,6 @@ class VehicleRepository extends ServiceEntityRepository
             $typeId = $dto->type->getId();
         }
         // get all vehicles that are not reserved in the given time frame
-        // @fixme i dont get it help me :c
         $query = '
             SELECT v.*
             FROM vehicle v

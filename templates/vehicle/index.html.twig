@@ -25,7 +25,7 @@
         <div class="d-flex flex-row flex-grow-1 justify-content-evenly">
             <a href="{{ path('home') }}" class="btn btn-primary col-1">Retour</a>
             {% if app.user %}
-                <a href="" class="btn btn-success col-1">Louer</a>
+                <a href="{{ path('reservation', {'id': vehicle.id}) }}" class="btn btn-success col-1">Louer</a>
             {% else %}
                 <a href="{{ path('login') }}" class="btn btn-danger col-1">Louer</a>
             {% endif %}

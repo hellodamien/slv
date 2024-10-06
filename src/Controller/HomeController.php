@@ -34,7 +34,7 @@ class HomeController extends AbstractController
     }
 
     #[Route('/', name: 'home')]
-    #[Route('/?page={page}', name: 'home_paginated')]
+    #[Route('/page/{page}', name: 'home_paginated')]
     public function index(Request $request, int $page = 0): Response
     {
         $dto = HomeVehicleSearch::create(
@@ -50,11 +50,14 @@ class HomeController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $vehicles = $this->vehicleRepository->findAvailable($dto);
+            $vehicleTotal = $this->vehicleRepository->getAvailableCount($dto);
             $hasUsedFilter = true;
         } else {
             $vehicles = $this->vehicleRepository->findMostReserved(self::ITEMS_PER_PAGE, $page);
+            $vehicleTotal = $this->vehicleRepository->count();
             $hasUsedFilter = false;
         }
+
         foreach ($vehicles as $id => $vehicle) {
             $vehicle['type'] = $this->typeRepository->find($vehicle['type_id']);
             $vehicle['model'] = $this->modelRepository->find($vehicle['model_id']);
@@ -62,9 +65,11 @@ class HomeController extends AbstractController
         }
 
         return $this->render('home/index.html.twig', [
-            'form'          => $form->createView(),
-            'vehicles'      => $vehicles,
-            'hasUsedFilter' => $hasUsedFilter,
+            'form'         => $form->createView(),
+            'vehicles'     => $vehicles,
+            'hasUsedFilter'=> $hasUsedFilter,
+            'vehicleTotal' => $vehicleTotal,
+            'itemsPerPage' => self::ITEMS_PER_PAGE,
         ]);
     }
 }

@@ -100,6 +100,36 @@ class VehicleRepository extends ServiceEntityRepository
         )->fetchAllAssociative();
     }
 
+    public function getAvailableCount($dto): int
+    {
+        if ($dto->type === null) {
+            $typeId = 0;
+        } else {
+            $typeId = $dto->type->getId();
+        }
+        // get all vehicles that are not reserved in the given time frame
+        $query = '
+            SELECT COUNT(v.id)
+            FROM vehicle v
+            WHERE v.id NOT IN
+            (
+                SELECT r.vehicle_id
+                FROM reservation r
+                WHERE r.start_date >= :startDate
+                OR r.end_date <= :endDate
+            )
+            AND v.type_id = :typeId OR :typeId = 0
+        ';
+
+        return $this->getEntityManager()->getConnection()->executeQuery($query,
+        [
+            'startDate' => $dto->startDate->format('Y-m-d H:i:s'),
+            'endDate'   => $dto->endDate->format('Y-m-d H:i:s'),
+            'typeId'    => $typeId,
+        ]
+        )->fetchOne();
+    }
+
     //    /**
     //     * @return Vehicle[] Returns an array of Vehicle objects
     //     */

@@ -17,9 +17,9 @@
         {% endif %}
 
         <div class="d-flex flex-column justify-content-evenly m-2">
-            {% for i in 0..1 %}
+            {% for i in 0..(itemsPerPage / 3 - 1) %}
                 <div class="row justify-content-evenly">
-                    {% for j in 0..2 %}
+                    {% for j in 0..(itemsPerPage / 2 - 1) %}
                         {% if vehicles[i * 3 + j] is defined %}
                             {% set vehicle = vehicles[i * 3 + j] %}
                                 <div class="card col-3 m-2">
@@ -40,10 +40,10 @@
 
         <div class="d-flex flex-row flex-grow-1 justify-content-evenly">
             {% if app.request.get('page') is defined and app.request.get('page') > 0 %}
-                <a href="{{ path('home', {'page': app.request.get('page') - 1}) }}" class="btn btn-primary"><-</a>
+                <a href="{{ path('home_paginated', {'page': app.request.get('page') - 1}) }}" class="btn btn-primary"><-</a>
             {% endif %}
-            {% if app.request.get('page') is defined and app.request.get('page') < vehicles|length / 3|round(0, 'floor') - 1 %}
-                <a href="{{ path('home', {'page': app.request.get('page') + 1}) }}" class="btn btn-primary">-></a>
+            {% if app.request.get('page') * itemsPerPage < vehicleTotal %}
+                <a href="{{ path('home_paginated', {'page': app.request.get('page') + 1}) }}" class="btn btn-primary">-></a>
             {% endif %}
         </div>
     </div>

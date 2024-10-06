@@ -77,4 +77,26 @@ class VehicleRepositoryTest extends TestCase
 
         $this->assertEmpty($vehicleRepository->findAvailable($dto));
     }
+
+    public function testGetAvailableCount(): void
+    {
+        $vehicleRepository = $this->createMock(VehicleRepository::class);
+
+        $vehicleRepository
+            ->expects($this->any())
+            ->method('getAvailableCount')
+            ->willReturn(1)
+        ;
+
+        $typeRepository = $this->createMock(TypeRepository::class);
+
+        $dto = HomeVehicleSearch::create(
+            new DateTime('now'),
+            new DateTime('tomorrow'),
+            $typeRepository->find(1),
+            1
+        );
+
+        $this->assertNotEmpty($vehicleRepository->getAvailableCount($dto));
+    }
 }

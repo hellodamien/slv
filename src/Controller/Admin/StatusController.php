@@ -14,17 +14,17 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/admin/status')]
 class StatusController extends AbstractController
 {
-    private StatusRepository        $statusRepository;
+    private StatusRepository       $statusRepository;
     private EntityManagerInterface $entityManager;
 
     public function __construct
     (
         StatusRepository        $statusRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface  $entityManager
     )
     {
         $this->statusRepository = $statusRepository;
-        $this->entityManager   = $entityManager;
+        $this->entityManager    = $entityManager;
     }
 
     #[Route('/', name: 'admin_status_index')]

@@ -14,16 +14,16 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/admin/type')]
 class TypeController extends AbstractController
 {
-    private TypeRepository        $typeRepository;
+    private TypeRepository         $typeRepository;
     private EntityManagerInterface $entityManager;
 
     public function __construct
     (
-        TypeRepository        $typeRepository,
+        TypeRepository         $typeRepository,
         EntityManagerInterface $entityManager
     )
     {
-        $this->typeRepository = $typeRepository;
+        $this->typeRepository  = $typeRepository;
         $this->entityManager   = $entityManager;
     }
 

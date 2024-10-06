@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class BrandControllerTest extends WebTestCase
 {
-    private int $testItemId;
     public function testIndex(): void
     {
         $client = static::createClient();

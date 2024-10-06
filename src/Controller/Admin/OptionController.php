@@ -14,17 +14,17 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/admin/option')]
 class OptionController extends AbstractController
 {
-    private OptionRepository        $optionRepository;
+    private OptionRepository       $optionRepository;
     private EntityManagerInterface $entityManager;
 
     public function __construct
     (
-        OptionRepository        $optionRepository,
+        OptionRepository       $optionRepository,
         EntityManagerInterface $entityManager
     )
     {
         $this->optionRepository = $optionRepository;
-        $this->entityManager   = $entityManager;
+        $this->entityManager    = $entityManager;
     }
 
     #[Route('/', name: 'admin_option_index')]

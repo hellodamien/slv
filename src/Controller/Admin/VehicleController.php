@@ -14,17 +14,17 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/admin/vehicle')]
 class VehicleController extends AbstractController
 {
-    private VehicleRepository        $vehicleRepository;
+    private VehicleRepository      $vehicleRepository;
     private EntityManagerInterface $entityManager;
 
     public function __construct
     (
-        VehicleRepository        $vehicleRepository,
+        VehicleRepository      $vehicleRepository,
         EntityManagerInterface $entityManager
     )
     {
         $this->vehicleRepository = $vehicleRepository;
-        $this->entityManager   = $entityManager;
+        $this->entityManager     = $entityManager;
     }
 
     #[Route('/', name: 'admin_vehicle_index')]

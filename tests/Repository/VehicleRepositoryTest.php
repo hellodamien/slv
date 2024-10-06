@@ -90,6 +90,11 @@ class VehicleRepositoryTest extends TestCase
 
         $typeRepository = $this->createMock(TypeRepository::class);
 
+        $typeRepository
+            ->expects($this->any())
+            ->method('find')
+            ->willReturn(new Type());
+
         $dto = HomeVehicleSearch::create(
             new DateTime('now'),
             new DateTime('tomorrow'),

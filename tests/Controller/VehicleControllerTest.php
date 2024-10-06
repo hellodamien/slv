@@ -44,7 +44,7 @@ class VehicleControllerTest extends WebTestCase
         $client->request('GET', '/vehicle/' . $vehicle->getId() . '/reservation');
         $formData = [
             'reservation[startDate]' => (new DateTime())->format('Y-m-d'),
-            'reservation[endDate]' => (new DateTime())->modify('+1 day')->format('Y-m-d'),
+            'reservation[endDate]'   => (new DateTime())->modify('+1 day')->format('Y-m-d'),
         ];
         $form = $client->getCrawler()->selectButton('Réserver')->form();
 

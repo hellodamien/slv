@@ -43,8 +43,8 @@ class HomeControllerTest extends WebTestCase
 
         $form = $crawler->filter('form')->form([
             'home_vehicle_search[startDate]' => $formData->startDate->format('Y-m-d'),
-            'home_vehicle_search[endDate]' => $formData->endDate->format('Y-m-d'),
-            'home_vehicle_search[type]' => $formData->type->getId(),
+            'home_vehicle_search[endDate]'   => $formData->endDate->format('Y-m-d'),
+            'home_vehicle_search[type]'      => $formData->type->getId(),
         ]);
 
         $client->submit($form);

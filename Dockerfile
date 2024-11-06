@@ -42,3 +42,5 @@ RUN chown -R www-data:www-data /var/www/
 USER www-data
 RUN composer install --no-interaction
 COPY --from=build-assets /app/public/build /var/www/html/public/build
+
+USER root
